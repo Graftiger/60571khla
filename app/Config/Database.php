@@ -31,7 +31,7 @@ class Database extends Config
 	 * @var array
 	 */
 	public $default = [
-		'DSN'      => '',
+		'DSN'      => 'pgsql:host=ec2-34-252-251-16.eu-west-1.compute.amazonaws.com;port=5432;dbname=dao30bdvkj5f4a;user=gryyaxrgncvzhs;password=119be3b80a465427a9dc0ae3e221bb592419b98de307e667c49c4b2e413f6441',
 		'hostname' => 'localhost',
 		'username' => '',
 		'password' => '',
@@ -47,7 +47,7 @@ class Database extends Config
 		'compress' => false,
 		'strictOn' => false,
 		'failover' => [],
-		'port'     => 3306,
+		'port'     => 5432,
 	];
 
 	/**

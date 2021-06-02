@@ -24,7 +24,6 @@ class App extends BaseConfig
 	 * @var string
 	 */
 	public $baseURL = 'http://localhost:8080/';
-
 	/**
 	 * --------------------------------------------------------------------------
 	 * Index File
@@ -193,20 +192,19 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $sessionSavePath = WRITEPATH . 'session';
-
-	/**
-	 * --------------------------------------------------------------------------
-	 * Session Match IP
-	 * --------------------------------------------------------------------------
-	 *
-	 * Whether to match the user's IP address when reading the session data.
-	 *
-	 * WARNING: If you're using the database driver, don't forget to update
-	 *          your session table's PRIMARY KEY when changing this setting.
-	 *
-	 * @var boolean
-	 */
+    /*public $sessionSavePath = WRITEPATH . 'session';*/
+    /**
+     * --------------------------------------------------------------------------
+     * Session Match IP
+     * --------------------------------------------------------------------------
+     *
+     * Whether to match the user's IP address when reading the session data.
+     *
+     * WARNING: If you're using the database driver, don't forget to update
+     *          your session table's PRIMARY KEY when changing this setting.
+     *
+     * @var boolean
+     */
 	public $sessionMatchIP = false;
 
 	/**

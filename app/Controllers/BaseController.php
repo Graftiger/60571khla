@@ -20,6 +20,8 @@ use Psr\Log\LoggerInterface;
  * For security be sure to declare any new methods as protected or private.
  */
 
+use IonAuth\Libraries\IonAuth;
+
 class BaseController extends Controller
 {
 	/**
@@ -37,7 +39,7 @@ class BaseController extends Controller
 	 * @var array
 	 */
 	protected $helpers = [];
-
+    protected $ionAuth;
 	/**
 	 * Constructor.
 	 *
@@ -54,5 +56,11 @@ class BaseController extends Controller
 		// Preload any models, libraries, etc, here.
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
+        $this->ionAuth = new IonAuth();
 	}
+    protected function withIon(array $data = [])
+    {
+        $data['ionAuth'] = $this->ionAuth;
+        return $data;
+    }
 }
