@@ -2,9 +2,72 @@
 
 class Auth extends \IonAuth\Controllers\Auth
 {
+    protected $ionAuth;
+    protected $viewsFolder = 'Views/auth';
+    protected $google_client;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->ionAuth = new IonAuthGoogle();
+        $this->google_client = new GoogleClient();
+    }
+
+    function randomPassword() {
+        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+        for ($i = 0; $i < 8; $i++) {
+            array_push($pass,$alphabet[rand(0, strlen($alphabet)-1)]);
+        }
+        return $pass;
+    }
+
+    public function google_login()
+    {
+        $code = $this->request->getVar('code');
+        if(!empty($code)) {
+            //Получение токена доступа от клиента Google API
+            $token = $this->google_client->getGoogleClient()->fetchAccessTokenWithAuthCode($code);
+
+            if (!isset($token["error"])) {
+                $this->google_client->getGoogleClient()->setAccessToken($token['access_token']);
+                $google_service = new Google_Service_Oauth2($this->google_client->getGoogleClient());
+                $data = $google_service->userinfo->get();
+                //Вызов функции аутентификации с полученным от Google API Google ID
+                if ($this->ionAuth->loginGoogle($data['id'])) {
+                    //if the login is successful
+                    //redirect them back to the home page
+                    $this->session->setFlashdata('message', $this->ionAuth->messages());
+                    return redirect()->to('/')->withCookies();
+                }
+                else {
+                    //если аутентификация не пройдена с полученным id, значит в таблице такого google_id еще нет и надо создать учетную запись
+                    //для этого вызывается функция регистрации
+                    $this->ionAuth->register($data['email'], $this->randomPassword(), $data['email'], ['google_id' => $data['id'],
+                        'first_name' => $data['givenName'],
+                        'last_name' => $data['familyName'],
+                        'picture_url' => $data['picture'],
+                        'locale' => $data['locale'],
+                        'company' => $data['hd']
+                    ], [1]);
+                    //после создания учетной записи снова пытаемся выполнить логин
+                    if ($this->ionAuth->loginGoogle($data['id'])) {
+                        //if the login is successful
+                        //redirect them back to the home page
+                        $this->session->setFlashdata('message', $this->ionAuth->messages());
+                        return redirect()->to('/')->withCookies();
+                    }
+                    else $this->session->setFlashdata('message', $this->ionAuth->errors($this->validationListTemplate));
+
+                }
+            }
+        }
+        return redirect()->back()->withInput();
+    }
+
     protected function renderPage(string $view, $data = null, bool $returnHtml = true): string
     {
         $data['ionAuth'] = new IonAuth(); //Добавление в массив $data объекта IonAuth()
+        $data['authUrl'] = $this->google_client->getGoogleClient()->createAuthUrl();
 
         $viewdata = $data ?: $this->data;
         $viewHtml = view($view, $viewdata);
@@ -122,11 +185,9 @@ class Auth extends \IonAuth\Controllers\Auth
                 'type' => 'password',
                 'value' => $this->form_validation->set_value('password_confirm'),
             ];
-
-
             $this->_render_page('auth' . DIRECTORY_SEPARATOR . 'create_user', $this->data);
 
         }
     }
-    protected $viewsFolder = 'auth';
+    /*protected $viewsFolder = 'auth';*/
 }

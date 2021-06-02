@@ -6,7 +6,10 @@
 	"license": "MIT",
 	"require": {
 		"php": "^7.3||^8.0",
-		"codeigniter4/framework": "^4"
+		"codeigniter4/framework": "^4",
+		"benedmunds/codeigniter-ion-auth": "4.x-dev",
+		"aws/aws-sdk-php":"^3.173",
+		"google/apiclient": "^2.7"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9",

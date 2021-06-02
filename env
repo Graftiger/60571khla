@@ -123,3 +123,8 @@ database.tests.DBDriver = MySQLi
 #--------------------------------------------------------------------
 
 # logger.threshold = 4
+
+S3_KEY = 60571khla
+S3_SECRET = 60571khlasomepassword
+S3_BUCKET = surgu
+S3_ENDPOINT = https://s3.osipov.digital
