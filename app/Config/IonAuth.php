@@ -8,4 +8,3 @@ class IonAuth extends \IonAuth\Config\IonAuth
     // public $emailTemplates           = 'App\\Views\\auth\\email\\';
     // ...
 }
-?>
